@@ -15,3 +15,12 @@ export const selectedCategory = categories => (dispatch) => {
         payload: trueValues
     });
 }
+
+export const priceSlider = priceRange => (dispatch) => {
+    // let trueValues = [];
+   // categories.filter(item => item.checked ? trueValues.push(item) : '');
+    dispatch({
+        type: PRICE_RANGE,
+        payload: priceRange
+    });
+}

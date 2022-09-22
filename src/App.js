@@ -6,8 +6,8 @@ import ProductView from './components/ProductView';
 function App() {
   return (
     <div className="App">
-      {/* <Routes /> */}
-      <ProductView />
+      <Routes />
+      {/* <ProductView /> */}
     </div>
   );
 }

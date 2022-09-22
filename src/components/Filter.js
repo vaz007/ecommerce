@@ -22,19 +22,23 @@ import { connect } from 'react-redux'
 import { Link } from "react-router-dom";
 
 import CheckboxProton from './CheckboxProton'
+import SliderProton from './SliderProton';
 import data from '../data.json'
 import {
-  selectedCategory
+  selectedCategory,
+  priceSlider
 } from "../redux-helpers/actions/filterAction";
 import { ShoppingBag } from '@mui/icons-material';
 
 const drawerWidth = 240;
-
-function Filter({ window, selectedCategory }) {
+// selectedPrice, changePrice
+function Filter({ window, selectedCategory, priceSlider }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const [categoryFilter, setCategoryFilter] = useState([])
   const [selectCategory, setSelectCategory] = useState([])
+  const [selectedPrice, setSelectedPrice] = useState([1000, 5000]);
+
 
   useEffect(() => {
     let unique = _.uniqBy(data.products, 'category');
@@ -43,7 +47,8 @@ function Filter({ window, selectedCategory }) {
     //   return addChekedField.push({ ...item, checked: false })
     // })
     setCategoryFilter(() => unique);
-  }, [selectedCategory])
+
+  }, [selectedCategory, priceSlider])
 
 
   const handleDrawerToggle = () => {
@@ -60,6 +65,12 @@ function Filter({ window, selectedCategory }) {
     setCategoryFilter(() => [...changeCheckedCategory])
     selectedCategory([...changeCheckedCategory]);
   };
+  const handleChangePrice = (event, value) => {
+    setSelectedPrice(value);
+    console.log('SELECTED PRICE RANGE : ', selectedPrice);
+    priceSlider([...selectedPrice]);
+
+  };
   const drawer = (
     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
       <div>
@@ -73,6 +84,10 @@ function Filter({ window, selectedCategory }) {
           />
         ))}
       </div>
+      <Divider />
+      <Typography> Select Price </Typography>
+      <SliderProton value={selectedPrice} changePrice={handleChangePrice}
+ />
     </Box >
 
   );
@@ -160,4 +175,4 @@ Filter.propTypes = {
   window: PropTypes.func,
 };
 
-export default connect(null, { selectedCategory })(Filter);;
+export default connect(null, { selectedCategory, priceSlider })(Filter);;

@@ -6,18 +6,29 @@ import _ from 'lodash';
 import ProductCard from './ProductCard';
 import Filter from './Filter';
 
-const Dashboard = ({ filteredRecords }) => {
+const Dashboard = ({ filteredRecords, priceRange }) => {
     const [jsonData, setJsonData] = useState(data)
     const [filteredData, setfilteredData] = useState([])
     useEffect(() => {
         console.log("filterRecords : ", filteredRecords)
-        if (filteredRecords.length !== 0) {
+        if(filteredRecords.length !==0 && priceRange.length !== 0) {
+            let filterRecordsResult = jsonData.products.filter(o1 => filteredRecords.some(o2 => o1.category === o2.category));
+            console.log("RESULT : ", filterRecordsResult);
+            let filterMinAndMaxPrice = filterRecordsResult.filter(item => item.price > priceRange[0] && item.price < priceRange[1]);
+            setfilteredData(() => [...filterMinAndMaxPrice])
+          
+        } else if (filteredRecords.length !== 0) {
             let result = jsonData.products.filter(o1 => filteredRecords.some(o2 => o1.category === o2.category));
             console.log("RESULT : ", result);
             setfilteredData(() => [...result])
-
+            
+        } else if (priceRange.length !== 0) {
+            let filterMinAndMaxPrice = jsonData.products.filter(item => item.price > priceRange[0] && item.price < priceRange[1]);
+            console.log('filterMinAndMaxPrice : ',filterMinAndMaxPrice);
+            setfilteredData(() => [...filterMinAndMaxPrice])
+          
         }
-    }, [filteredRecords])
+    }, [filteredRecords, priceRange])
 
     return (
         <div style={{ width: '100%' }}>
@@ -59,7 +70,8 @@ const Dashboard = ({ filteredRecords }) => {
 }
 const mapStateToProps = (state) => {
     return {
-        filteredRecords: state.filter.selectedCategory
+        filteredRecords: state.filter.selectedCategory,
+        priceRange: state.filter.priceRange
     }
 }
 
